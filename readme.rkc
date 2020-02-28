@@ -1,0 +1,39 @@
+# TODO: apply options!
+
+# https://github.com/ayufan-rock64/linux-kernel
+
+# add t9 and h96mp dts files
+patch -p1 < /compile/doc/ayufan-rk/misc.rkc/add-more-dts-files.patch
+cp /compile/doc/ayufan-rk/misc.rkc/dtb/*.dts /compile/source/ayufan-rk/arch/arm64/boot/dts/rockchip
+
+cp /compile/doc/ayufan-rk/config.rkc /compile/source/linux-ayufan-rk/.config
+cd /compile/source/linux-ayufan-rk
+# git pull
+export ARCH=arm64
+# make defconfig + fix options - see misc.rkc/options
+make oldconfig
+make -j 4 Image dtbs modules
+export kver=`make kernelrelease`
+echo ${kver}
+# remove debug info if there and wanted
+# find . -type f -name '*.ko' | sudo xargs -n 1 objcopy --strip-unneeded
+make modules_install
+# make headers_install INSTALL_HDR_PATH=/usr
+cp -v .config /boot/config-${kver}
+# for rpi
+cp -v arch/arm64/boot/Image /boot/Image-${kver}
+# for s90
+# mkimage -A arm64 -O linux -T kernel -C none -a 0x1080000 -e 0x1080000 -n linux-${kver} -d arch/arm64/boot/Image /boot/uImage-${kver}
+mkdir /boot/dtb-${kver}
+cp -v arch/arm64/boot/dts/rockchip/rk3328-*.dtb /boot/dtb-${kver}
+cp -v arch/arm64/boot/dts/rockchip/rk3368-*.dtb /boot/dtb-${kver}
+cp -v arch/arm64/boot/dts/rockchip/rk3399-*.dtb /boot/dtb-${kver}
+cp -v System.map /boot/System.map-${kver}
+cd /boot
+update-initramfs -c -k ${kver}
+# mkimage -A arm64 -O linux -T ramdisk -a 0x0 -e 0x0 -n initrd.img-${kver} -d initrd.img-${kver} uInitrd-${kver}
+tar cvzf /compile/source/linux-ayufan-rk/${kver}.tar.gz /boot/*-${kver} /lib/modules/${kver}
+cp -v /compile/doc/ayufan-rk/config.rkc /compile/doc/ayufan-rk/config.rkc.old
+cp -v /compile/source/linux-ayufan-rk/.config /compile/doc/ayufan-rk/config.rkc
+cp -v /compile/source/linux-ayufan-rk/.config /compile/doc/ayufan-rk/config.rkc-${kver}
+cp -v /compile/source/linux-ayufan-rk/*.tar.gz /compile/result/ayufan-rk

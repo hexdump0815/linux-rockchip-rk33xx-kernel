@@ -1,0 +1,5 @@
+see: https://forum.armbian.com/topic/8082-armbian-for-tv-box-rk3328/?do=findComment&comment=88555
+
+from: https://github.com/easybe/linux-rockchip/blob/h96mp/arch/arm64/boot/dts/rockchip/rk3328-box-h96mp.dts
+
+dtb from: https://forum.armbian.com/applications/core/interface/file/attachment.php?id=5378
