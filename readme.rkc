@@ -4,7 +4,7 @@
 
 # add t9 and h96mp dts files
 patch -p1 < /compile/doc/ayufan-rk/misc.rkc/add-more-dts-files.patch
-cp /compile/doc/ayufan-rk/misc.rkc/dtb/*.dts /compile/source/ayufan-rk/arch/arm64/boot/dts/rockchip
+cp -i /compile/doc/ayufan-rk/misc.rkc/dtb/*.dts /compile/source/ayufan-rk/arch/arm64/boot/dts/rockchip
 
 cp /compile/doc/ayufan-rk/config.rkc /compile/source/linux-ayufan-rk/.config
 cd /compile/source/linux-ayufan-rk
